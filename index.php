@@ -21,6 +21,7 @@ $headTitle = array('type', 'length', 'precision', 'format', 'offset');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="static/js/jquery-3.5.1.min.js"></script>
     <style>
         .body {
             width: 999999px;
@@ -39,6 +40,7 @@ $headTitle = array('type', 'length', 'precision', 'format', 'offset');
             <table>
                 <thead>
                     <tr>
+                        <th><div><input style="width: 50px;background-color: #FFF;border: none" type="button"></div></th>
                         <?php
                         foreach ($title as $key => $value) {
                             echo '<th><div><input name="'.$value.'_name" style="width: 200px;" type="text" value="'.$value.'"></div></th>';
@@ -51,7 +53,8 @@ $headTitle = array('type', 'length', 'precision', 'format', 'offset');
                 <table>
                     <?php
                     foreach ($data as $key => $value) {
-                        echo '<tr>';
+                        echo '<tr class="dbfdata">';
+                        echo '<td><input class="delete" style="width: 50px;" type="button" value="删除"></td>';
                         foreach ($value as $key1 => $value1) {
                             if (in_array($key1, $title)) {
                                 echo '<td><input name="'.$key1.'_'.$key.'" style="width: 200px;" type="text" value="'.$value1.'"></td>';
@@ -69,10 +72,29 @@ $headTitle = array('type', 'length', 'precision', 'format', 'offset');
                 }
             }
             ?>
+            <input class="add" type="button" value="添加">
             <input type="submit" value="保存">
             <a href="index.html">重新选择</a>
         </form>
     </div>
 </body>
+
+<script>
+    $('body').on("click", ".delete", function(){
+        $(this).parent().parent().remove();
+    });
+
+    $('.add').click(function(){
+        $content = '<tr class="dbfdata">\
+                        <td><input class="delete" style="width: 50px;" type="button" value="删除"></td>\
+                        <?php
+                        foreach ($title as $key => $value) {
+                            echo '<td><input name="'.$value.'_';?>'+($('.content table').length+1)+'<?php echo '" style="width: 200px;" type="text" value=""></td>';
+                        }
+                        ?>
+                    </tr>';
+        $('.content table').append($content);
+    });
+</script>
 
 </html>
