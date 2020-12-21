@@ -22,9 +22,22 @@ class Dbase {
         return dbase_close($resource);
     }
 
+    public function getHeader($resource) {
+        return dbase_get_header_info($resource);
+    }
+
     // 获取数据总行数
     public function getLines($resource) {
         return dbase_numrecords($resource);
+    }
+
+    // 读取一行数据（索引数组）
+    public function read($resource, $line) {
+        $row = dbase_get_record($resource, $line);
+        foreach ($row as $key => $value) {
+            $row[$key] = trim(mb_convert_encoding($value, 'UTF-8', 'GBK'));
+        }
+        return $row;
     }
 
     // 读取一行数据（关联数组）
@@ -45,18 +58,20 @@ class Dbase {
     public function readAllAssoc($file_url) {
         $resource = $this->open($file_url);
         $lines = $this->getLines($resource);
+        $header = $this->getHeader($resource);
+        $data[] = array_column($header, 'name');
         for ($i=1; $i <= $lines; $i++) { 
             $data[] = $this->readAssoc($resource, $i);
         }
         $this->close($resource);
-        return $data;
+        return array('data'=>$data, 'header'=>$header);
     }
 
     // 添加所有数据
     public function addAll($file_url, $field, $data) {
         $resource = $this->create($file_url, $field);
         foreach ($data as $key => $value) {
-            $this->add($value, $key);
+            $this->add($resource, $value);
         }
         $this->close($resource);
         return true;
