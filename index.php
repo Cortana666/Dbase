@@ -24,11 +24,11 @@ $headTitle = array('type', 'length', 'precision', 'format', 'offset');
     <script src="static/js/jquery-3.5.1.min.js"></script>
     <style>
         .body {
-            width: 999999px;
+            width: 50000px;
         }
 
         .content {
-            height: 90%;
+            height: 90vh;
             overflow: scroll;
         }
     </style>
